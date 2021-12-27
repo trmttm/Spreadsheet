@@ -11,7 +11,6 @@ from .Presenters import Presenters
 
 class Spreadsheet(SpreadsheetABC):
     def __init__(self):
-        # commend added again
         entities = Entities()
         presenters = Presenters()
         gateways = Gateways(entities)
