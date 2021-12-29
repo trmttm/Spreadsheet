@@ -8,7 +8,7 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
     feedback = ''
     worksheets = {}
     workbook_name, instructions = spreadsheet_model
-    sheet_to_rows_to_levels = options['levels_dict'] if 'levels_dict' in options else {}
+    sheet_to_rows_to_levels = options.get('levels_dict', {})
     workbook = xlsxwriter.Workbook(workbook_name)
     for instruction in instructions:
         cell_value = instruction[0]
