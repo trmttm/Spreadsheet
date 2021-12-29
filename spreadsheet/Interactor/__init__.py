@@ -255,8 +255,8 @@ class Interactor(BoundaryInABC):
 
     def save_vba_command_sheet(self, file_name: str, sheet: VBAcommands, vba_file=None):
         sheet_data = sheet.get_worksheet_data()
-        if vba_file is not None:
-            kwargs = {'vba_file': vba_file}
+
+        kwargs = {'vba_file': vba_file} if vba_file is not None else {}
         self.export_separate_workbook(file_name, (sheet_data,), **kwargs)
 
     def set_formula_to_input_sensitivities(self, sheet: SensitivitySheet):
