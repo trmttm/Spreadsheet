@@ -64,7 +64,12 @@ class Interactor(BoundaryInABC):
         inputs_segregated = Inputs.get_input_accounts_segregated_by_worksheets(input_accounts, worksheets_data)
         self.create_input_sheet(inputs_segregated, shape_id_to_text)
         if insert_sheet_name:
-            self.insert_worksheet_name_to_input_sheet(tuple(worksheets_data.keys()))
+            worksheets_that_have_input_accounts = []
+            for sheet_name, accounts in worksheets_data.items():
+                a = set(accounts).intersection(set(input_accounts))
+                if a != set():
+                    worksheets_that_have_input_accounts.append(sheet_name)
+            self.insert_worksheet_name_to_input_sheet(tuple(worksheets_that_have_input_accounts))
         self.set_inputs_values(input_accounts, input_values)
         self.set_period_account_if_any()
 
