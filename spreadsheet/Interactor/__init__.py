@@ -5,6 +5,7 @@ from . import Inputs
 from . import RPE
 from . import Sensitivity
 from . import UDF
+from . import UOM
 from . import VAc
 from . import implementation as impl
 from . import rpe_converter as rpec
@@ -159,16 +160,14 @@ class Interactor(BoundaryInABC):
         UDF.set_user_defined_function_(*args)
 
     # UOM
-    def insert_uom(self, shape_id_to_uom: dict):
-        accounts = self._accounts
+    def insert_uom(self, field_name: str):
         worksheets = self._worksheets
         position = 3
-        field_name = 'UOM'
         for sheet_name, worksheet in worksheets.items():
             worksheet.add_field(field_name, position)
-        for shape_id, uom in shape_id_to_uom.items():
-            account = accounts.get_account(int(shape_id))
-            account.add_new_attribute(field_name, uom)
+
+    def set_uom_to_accounts(self, shape_id_to_uom: dict, field_name: str):
+        UOM.set_uom_to_accounts(self._accounts, self.direct_links, field_name, shape_id_to_uom)
 
     # Formatting
     def format_subtotal(self, subtotal_account_ids: tuple):

@@ -10,6 +10,8 @@ from .Presenters import Presenters
 
 
 class Spreadsheet(SpreadsheetABC):
+    _field_uom = 'UOM'
+
     def __init__(self):
         entities = Entities()
         presenters = Presenters()
@@ -64,7 +66,7 @@ class Spreadsheet(SpreadsheetABC):
         interactor.handle_inputs(input_accounts, input_values, insert_sheet_name, shape_id_to_text, worksheets_data)
         interactor.create_new_worksheets(shape_id_to_text, worksheets_data, no_indent)
         interactor.insert_vertical_account_columns(vertical_accounts)
-        interactor.insert_uom(shape_id_to_uom)
+        interactor.insert_uom(self._field_uom)
 
         # ===========ROW / COLUMN fixes here. Change them before here!=================================================
         add_sensitivity_sheet = kwargs.get('add_sensitivity_sheet', None)
@@ -89,6 +91,7 @@ class Spreadsheet(SpreadsheetABC):
         interactor.add_direct_links_from_total_to_vertical_account(vertical_accounts)
         interactor.remove_redundant_vertical_calculation_formulas(vertical_accounts)
         interactor.connect_direct_links()
+        interactor.set_uom_to_accounts(shape_id_to_uom, self._field_uom)
 
         if user_defined_function is not None:
             function_name = user_defined_function['name']
