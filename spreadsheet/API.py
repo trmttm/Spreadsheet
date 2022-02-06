@@ -21,20 +21,20 @@ class Spreadsheet(SpreadsheetABC):
         rpes, sub_total_accounts = alter_kwargs_to_set_up_vertical_accounts(kwargs)
 
         # Unpack kwargs
-        input_accounts = get_kwargs('inputs', kwargs)
-        input_values = get_kwargs('input_values', kwargs)
-        insert_sheet_name = get_kwargs('insert_sheet_name', kwargs)
-        workbook_name = get_kwargs('workbook_name', kwargs)
-        shape_id_to_text = get_kwargs('shape_id_to_address', kwargs)
-        operator_ids = get_kwargs('operators', kwargs)
-        constant_ids = get_kwargs('constants', kwargs)
-        worksheets_data = get_kwargs('sheets_data', kwargs)
-        direct_links = get_kwargs('direct_links_mutable', kwargs)
-        user_defined_function = get_kwargs('user_defined_function', kwargs)
-        format_data = get_kwargs('format_data', kwargs)
-        number_format_data = get_kwargs('number_format_data', kwargs)
-        number_of_periods = get_kwargs('nop', kwargs)
-        vertical_accounts = get_kwargs('vertical_acs', kwargs) or {}
+        input_accounts = kwargs.get('inputs', None)
+        input_values = kwargs.get('input_values', None)
+        insert_sheet_name = kwargs.get('insert_sheet_name', None)
+        workbook_name = kwargs.get('workbook_name', None)
+        shape_id_to_text = kwargs.get('shape_id_to_address', None)
+        operator_ids = kwargs.get('operators', None)
+        constant_ids = kwargs.get('constants', None)
+        worksheets_data = kwargs.get('sheets_data', None)
+        direct_links = kwargs.get('direct_links_mutable', None)
+        user_defined_function = kwargs.get('user_defined_function', None)
+        format_data = kwargs.get('format_data', None)
+        number_format_data = kwargs.get('number_format_data', None)
+        number_of_periods = kwargs.get('nop', None)
+        vertical_accounts = kwargs.get('vertical_acs', None) or {}
         heading_accounts = get_formatted_accounts(format_data, 'heading')
         whole_number_accounts = get_formatted_accounts(number_format_data, 'whole number')
         one_digit_accounts = get_formatted_accounts(number_format_data, '1-digit')
@@ -65,12 +65,12 @@ class Spreadsheet(SpreadsheetABC):
         interactor.insert_vertical_account_columns(vertical_accounts)
 
         # ===========ROW / COLUMN fixes here. Change them before here!=================================================
-        add_sensitivity_sheet = get_kwargs('add_sensitivity_sheet', kwargs)
+        add_sensitivity_sheet = kwargs.get('add_sensitivity_sheet', None)
         if add_sensitivity_sheet:
-            target_accounts = get_kwargs('target_accounts', kwargs)
-            variables = get_kwargs('selected_variables', kwargs)
-            shape_id_to_delta = get_kwargs('shape_id_to_delta', kwargs)
-            command_file_name = get_kwargs('command_file_name', kwargs)
+            target_accounts = kwargs.get('target_accounts', None)
+            variables = kwargs.get('selected_variables', None)
+            shape_id_to_delta = kwargs.get('shape_id_to_delta', None)
+            command_file_name = kwargs.get('command_file_name', None)
 
             rpes = interactor.modify_input_sheet_for_prior_to_creating_sensitivity_sheet(rpes)
             sensitivity_sheet = interactor.create_sensitivity_sheet(target_accounts, variables, shape_id_to_delta)
@@ -113,9 +113,6 @@ class Spreadsheet(SpreadsheetABC):
         write_dictionary_as_excel(file_name, dictionary)
 
 
-def get_kwargs(key: str, kwargs: dict):
-    return kwargs[key] if key in kwargs else None
-
 
 def get_formatted_accounts(format_data: dict, key: str) -> tuple:
     accounts = ()
@@ -126,13 +123,13 @@ def get_formatted_accounts(format_data: dict, key: str) -> tuple:
 
 
 def alter_kwargs_to_set_up_vertical_accounts(kwargs) -> tuple:
-    shape_id_to_text = get_kwargs('shape_id_to_address', kwargs)
-    number_of_periods = get_kwargs('nop', kwargs)
-    format_data = get_kwargs('format_data', kwargs)
-    worksheets_data = get_kwargs('sheets_data', kwargs)
-    vertical_accounts = get_kwargs('vertical_acs', kwargs) or {}
+    shape_id_to_text = kwargs.get('shape_id_to_address', None)
+    number_of_periods = kwargs.get('nop', None)
+    format_data = kwargs.get('format_data', None)
+    worksheets_data = kwargs.get('sheets_data', None)
+    vertical_accounts = kwargs.get('vertical_acs', None) or {}
     sub_total_accounts = get_formatted_accounts(format_data, 'total')
-    rpes = get_kwargs('rpes', kwargs)
+    rpes = kwargs.get('rpes', None)
 
     args = number_of_periods, rpes, shape_id_to_text, vertical_accounts, sub_total_accounts, worksheets_data
     rpes, sub_total_accounts = VAc.create_vertical_account_rpe_and_sub_totals(*args)
