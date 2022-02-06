@@ -34,7 +34,7 @@ class Spreadsheet(SpreadsheetABC):
         format_data = kwargs.get('format_data', None)
         number_format_data = kwargs.get('number_format_data', None)
         number_of_periods = kwargs.get('nop', None)
-        vertical_accounts = kwargs.get('vertical_acs', None) or {}
+        vertical_accounts = kwargs.get('vertical_acs', {})
         heading_accounts = get_formatted_accounts(format_data, 'heading')
         whole_number_accounts = get_formatted_accounts(number_format_data, 'whole number')
         one_digit_accounts = get_formatted_accounts(number_format_data, '1-digit')
