@@ -45,6 +45,7 @@ def get_vertical_dependencies(owner_id, v_calc_ac_ids: tuple, vertical_accounts:
 def insert_new_vertical_columns(max_vertical_accounts: int, position, worksheets: Worksheets):
     for sheet_name, worksheet in worksheets.items():
         for n in range(max_vertical_accounts):
+            # Add field to all of worksheets
             new_field_name = create_vertical_field_name(n)
             worksheet.add_field(new_field_name, position)
 

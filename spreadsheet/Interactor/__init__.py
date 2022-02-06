@@ -158,6 +158,18 @@ class Interactor(BoundaryInABC):
         args = account, account_id, arguments, name, self.input_sheet_name, self.number_of_periods, self._worksheets
         UDF.set_user_defined_function_(*args)
 
+    # UOM
+    def insert_uom(self, shape_id_to_uom: dict):
+        accounts = self._accounts
+        worksheets = self._worksheets
+        position = 3
+        field_name = 'UOM'
+        for sheet_name, worksheet in worksheets.items():
+            worksheet.add_field(field_name, position)
+        for shape_id, uom in shape_id_to_uom.items():
+            account = accounts.get_account(int(shape_id))
+            account.add_new_attribute(field_name, uom)
+
     # Formatting
     def format_subtotal(self, subtotal_account_ids: tuple):
         self._set_format_to_cells(self._format_subtotal, subtotal_account_ids)

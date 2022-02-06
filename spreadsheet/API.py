@@ -35,6 +35,7 @@ class Spreadsheet(SpreadsheetABC):
         number_format_data = kwargs.get('number_format_data', None)
         number_of_periods = kwargs.get('nop', None)
         vertical_accounts = kwargs.get('vertical_acs', {})
+        shape_id_to_uom = kwargs.get('shape_id_to_uom', {})
         heading_accounts = get_formatted_accounts(format_data, 'heading')
         whole_number_accounts = get_formatted_accounts(number_format_data, 'whole number')
         one_digit_accounts = get_formatted_accounts(number_format_data, '1-digit')
@@ -63,6 +64,7 @@ class Spreadsheet(SpreadsheetABC):
         interactor.handle_inputs(input_accounts, input_values, insert_sheet_name, shape_id_to_text, worksheets_data)
         interactor.create_new_worksheets(shape_id_to_text, worksheets_data, no_indent)
         interactor.insert_vertical_account_columns(vertical_accounts)
+        interactor.insert_uom(shape_id_to_uom)
 
         # ===========ROW / COLUMN fixes here. Change them before here!=================================================
         add_sensitivity_sheet = kwargs.get('add_sensitivity_sheet', None)
@@ -111,7 +113,6 @@ class Spreadsheet(SpreadsheetABC):
     @staticmethod
     def save_dictionary_as_spreadsheet(file_name, dictionary: dict):
         write_dictionary_as_excel(file_name, dictionary)
-
 
 
 def get_formatted_accounts(format_data: dict, key: str) -> tuple:
