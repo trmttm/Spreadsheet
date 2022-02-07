@@ -199,7 +199,7 @@ class Interactor(BoundaryInABC):
         Formats.set_number_formats(number_format, target_accounts, self._worksheets)
 
     # Sensitivity Sheet
-    def modify_input_sheet_for_prior_to_creating_sensitivity_sheet(self, rpes) -> tuple:
+    def modify_input_sheet_for_prior_to_creating_sensitivity_sheet(self, rpes, field_uom: str, uom_dict: dict) -> tuple:
         mutable_rpes = list(rpes)
 
         input_accounts = self.input_accounts
@@ -236,6 +236,9 @@ class Interactor(BoundaryInABC):
             if self.sheet_names_were_inserted_in_input_sheet:
                 new_input_account.indent()
                 sensitivity_account.indent()
+            # 9) Add UOM to [new_input]s
+            uom = uom_dict.get(input_id, '')
+            new_input_account.add_new_attribute(field_uom, uom)
 
         return tuple(mutable_rpes)
 

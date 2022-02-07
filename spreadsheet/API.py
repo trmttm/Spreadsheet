@@ -76,7 +76,8 @@ class Spreadsheet(SpreadsheetABC):
             shape_id_to_delta = kwargs.get('shape_id_to_delta', None)
             command_file_name = kwargs.get('command_file_name', None)
 
-            rpes = interactor.modify_input_sheet_for_prior_to_creating_sensitivity_sheet(rpes)
+            f = interactor.modify_input_sheet_for_prior_to_creating_sensitivity_sheet
+            rpes = f(rpes, self._field_uom, shape_id_to_uom)
             sensitivity_sheet = interactor.create_sensitivity_sheet(target_accounts, variables, shape_id_to_delta)
             interactor.set_formula_to_input_sensitivities(sensitivity_sheet)
             interactor.add_tornado_chart(sensitivity_sheet)
