@@ -61,6 +61,10 @@ class Interactor(BoundaryInABC):
 
     def handle_inputs(self, input_accounts: tuple, input_values: tuple, insert_sheet_name: bool, shape_id_to_text: dict,
                       worksheets_data: dict):
+        """
+        if you pass worksheets_data, then inputs will be segregated by worksheets.
+        if you pass modules_data, then inputs will be segregated by modules.
+        """
         self.set_input_accounts(input_accounts)
         inputs_segregated = Inputs.get_input_accounts_segregated_by_worksheets(input_accounts, worksheets_data)
         self.create_input_sheet(inputs_segregated, shape_id_to_text)
