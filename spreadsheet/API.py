@@ -144,7 +144,7 @@ def alter_kwargs_to_set_up_vertical_accounts(kwargs) -> tuple:
 
 def handle_breakdown_accounts(rpes, kwargs):
     shape_id_to_text = kwargs.get('shape_id_to_text', {})
-    accounts_to_be_broken_down = kwargs.get('breakdown_accounts', (8,))
+    accounts_to_be_broken_down = kwargs.get('breakdown_accounts', ())
     from .Interactor import util
     operator_accounts = kwargs.get('operators', ())
     rpe_dict = util.create_rpe_dictionary(rpes)
@@ -182,7 +182,7 @@ def handle_breakdown_accounts(rpes, kwargs):
     new_rpes = []
     for each_rpes in rpes:
         account = each_rpes[0]
-        if account in accounts_to_be_broken_down:
+        if account in new_rpe_dictionary:
             new_rpe = new_rpe_dictionary[account]
             new_rpes.append(new_rpe)
         else:
@@ -191,10 +191,14 @@ def handle_breakdown_accounts(rpes, kwargs):
     worksheets_data = kwargs.get('sheets_data', {})
     for sheet_name, sheet_contents in worksheets_data.items():
         new_sheet_contents = []
-        for content in sheet_contents:
-            if content in accounts_to_be_broken_down:
+        for n, content in enumerate(sheet_contents):
+            if content in breakdown_account_dictionary:
                 # Inserting breakdown accounts
                 account_to_be_broken_down = content
+
+                if n > 0:
+                    if str(new_sheet_contents[n - 1]) != 'blank':
+                        new_sheet_contents.append('blank')
                 new_sheet_contents += breakdown_account_dictionary[account_to_be_broken_down]
                 new_sheet_contents.append(content)
                 new_sheet_contents.append('blank')
