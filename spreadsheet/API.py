@@ -21,7 +21,7 @@ class Spreadsheet(SpreadsheetABC):
 
     def export(self, **kwargs) -> tuple:
         rpes, sub_total_accounts = alter_kwargs_to_set_up_vertical_accounts(kwargs)
-        # rpes = handle_breakdown_accounts(rpes, kwargs)
+        rpes = handle_breakdown_accounts(rpes, kwargs)
         # Unpack kwargs
         input_accounts = kwargs.get('inputs', None)
         input_values = kwargs.get('input_values', None)
@@ -143,6 +143,7 @@ def alter_kwargs_to_set_up_vertical_accounts(kwargs) -> tuple:
 
 
 def handle_breakdown_accounts(rpes, kwargs):
+    shape_id_to_text = kwargs.get('shape_id_to_text', {})
     accounts_to_be_broken_down = kwargs.get('breakdown_accounts', (8,))
     from .Interactor import util
     operator_accounts = kwargs.get('operators', ())
@@ -159,7 +160,6 @@ def handle_breakdown_accounts(rpes, kwargs):
                 if element not in operator_accounts:
                     # Breakdown Account Dictionary Creation
                     new_breakdown_account = f'breakdown_of_account_{account_to_be_broken_down}_{breakdown_account_id}'
-                    kwargs['shape_id_to_text']
                     breakdown_account_id += 1
                     if account_to_be_broken_down in breakdown_account_dictionary:
                         breakdown_account_dictionary[account_to_be_broken_down].append(new_breakdown_account)
@@ -170,7 +170,8 @@ def handle_breakdown_accounts(rpes, kwargs):
                     from_id = element
                     to_id = new_breakdown_account
                     new_direct_link = (from_id, to_id, 0)
-                    kwargs['direct_links'] += new_direct_link,
+                    kwargs['direct_links'] += (new_direct_link,)
+                    kwargs['shape_id_to_text'][new_breakdown_account] = shape_id_to_text.get(element)
 
                     # New RPE Creation
                     new_rpe.append(new_breakdown_account)
@@ -182,7 +183,7 @@ def handle_breakdown_accounts(rpes, kwargs):
     for each_rpes in rpes:
         account = each_rpes[0]
         if account in accounts_to_be_broken_down:
-            new_rpe = (account, new_rpe_dictionary[account])
+            new_rpe = new_rpe_dictionary[account]
             new_rpes.append(new_rpe)
         else:
             new_rpes.append(each_rpes)
@@ -195,7 +196,10 @@ def handle_breakdown_accounts(rpes, kwargs):
                 # Inserting breakdown accounts
                 account_to_be_broken_down = content
                 new_sheet_contents += breakdown_account_dictionary[account_to_be_broken_down]
-            new_sheet_contents.append(content)
+                new_sheet_contents.append(content)
+                new_sheet_contents.append('blank')
+            else:
+                new_sheet_contents.append(content)
 
         # Modifying kwargs itself, rather than returning new value
         kwargs['sheets_data'][sheet_name] = new_sheet_contents
