@@ -84,7 +84,7 @@ class TestInteractor(unittest.TestCase):
             spreadsheet = Spreadsheet()
             spreadsheet._interactor = self._interactor  # replace interactor with test_interactor with catcher attached.
             new_signature = {'workbook_name': request_model[0],
-                             'shape_id_to_address': request_model[1],
+                             'shape_id_to_text': request_model[1],
                              'inputs': request_model[2],
                              'input_values': request_model[3],
                              'operators': request_model[4],
@@ -92,7 +92,7 @@ class TestInteractor(unittest.TestCase):
                              'sheets_data': request_model[6],
                              'rpes': request_model[7],
                              'nop': request_model[8],
-                             'direct_links_mutable': request_model[9], }
+                             'direct_links': request_model[9], }
             spreadsheet.export(**new_signature)
             gateway_model_caught = self._catcher.gateway_models[-1]
 

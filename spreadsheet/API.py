@@ -21,18 +21,18 @@ class Spreadsheet(SpreadsheetABC):
 
     def export(self, **kwargs) -> tuple:
         rpes, sub_total_accounts = alter_kwargs_to_set_up_vertical_accounts(kwargs)
-
+        # rpes = handle_breakdown_accounts(rpes, kwargs)
         # Unpack kwargs
         input_accounts = kwargs.get('inputs', None)
         input_values = kwargs.get('input_values', None)
         insert_sheet_name = kwargs.get('insert_sheet_name', None)
         workbook_name = kwargs.get('workbook_name', None)
-        shape_id_to_text = kwargs.get('shape_id_to_address', None)
+        shape_id_to_text = kwargs.get('shape_id_to_text', None)
         operator_ids = kwargs.get('operators', None)
         constant_ids = kwargs.get('constants', None)
         worksheets_data = kwargs.get('sheets_data', None)
         modules_data = kwargs.get('modules_data', worksheets_data)
-        direct_links = kwargs.get('direct_links_mutable', None)
+        direct_links = kwargs.get('direct_links', None)
         user_defined_function = kwargs.get('user_defined_function', None)
         format_data = kwargs.get('format_data', None)
         number_format_data = kwargs.get('number_format_data', None)
@@ -129,7 +129,7 @@ def get_formatted_accounts(format_data: dict, key: str) -> tuple:
 
 
 def alter_kwargs_to_set_up_vertical_accounts(kwargs) -> tuple:
-    shape_id_to_text = kwargs.get('shape_id_to_address', None)
+    shape_id_to_text = kwargs.get('shape_id_to_text', None)
     number_of_periods = kwargs.get('nop', None)
     format_data = kwargs.get('format_data', None)
     worksheets_data = kwargs.get('sheets_data', None)
@@ -140,3 +140,63 @@ def alter_kwargs_to_set_up_vertical_accounts(kwargs) -> tuple:
     args = number_of_periods, rpes, shape_id_to_text, vertical_accounts, sub_total_accounts, worksheets_data
     rpes, sub_total_accounts = VAc.create_vertical_account_rpe_and_sub_totals(*args)
     return rpes, sub_total_accounts
+
+
+def handle_breakdown_accounts(rpes, kwargs):
+    accounts_to_be_broken_down = kwargs.get('breakdown_accounts', (8,))
+    from .Interactor import util
+    operator_accounts = kwargs.get('operators', ())
+    rpe_dict = util.create_rpe_dictionary(rpes)
+    breakdown_account_dictionary = {}
+    new_rpe_dictionary = {}
+    for account_to_be_broken_down in accounts_to_be_broken_down:
+        rpe_of_breakdown_account = rpe_dict.get(account_to_be_broken_down, ())
+        if len(rpe_of_breakdown_account) > 2:
+            operator = rpe_of_breakdown_account[2]
+            new_rpe = []
+            breakdown_account_id = 0
+            for n, element in enumerate(rpe_of_breakdown_account):
+                if element not in operator_accounts:
+                    # Breakdown Account Dictionary Creation
+                    new_breakdown_account = f'breakdown_of_account_{account_to_be_broken_down}_{breakdown_account_id}'
+                    kwargs['shape_id_to_text']
+                    breakdown_account_id += 1
+                    if account_to_be_broken_down in breakdown_account_dictionary:
+                        breakdown_account_dictionary[account_to_be_broken_down].append(new_breakdown_account)
+                    else:
+                        breakdown_account_dictionary[account_to_be_broken_down] = [new_breakdown_account]
+
+                    # Adding New Direct Links to kwargs
+                    from_id = element
+                    to_id = new_breakdown_account
+                    new_direct_link = (from_id, to_id, 0)
+                    kwargs['direct_links'] += new_direct_link,
+
+                    # New RPE Creation
+                    new_rpe.append(new_breakdown_account)
+                    if n > 0:
+                        new_rpe.append(operator)
+            new_rpe_dictionary[account_to_be_broken_down] = (account_to_be_broken_down, tuple(new_rpe))
+
+    new_rpes = []
+    for each_rpes in rpes:
+        account = each_rpes[0]
+        if account in accounts_to_be_broken_down:
+            new_rpe = (account, new_rpe_dictionary[account])
+            new_rpes.append(new_rpe)
+        else:
+            new_rpes.append(each_rpes)
+
+    worksheets_data = kwargs.get('sheets_data', {})
+    for sheet_name, sheet_contents in worksheets_data.items():
+        new_sheet_contents = []
+        for content in sheet_contents:
+            if content in accounts_to_be_broken_down:
+                # Inserting breakdown accounts
+                account_to_be_broken_down = content
+                new_sheet_contents += breakdown_account_dictionary[account_to_be_broken_down]
+            new_sheet_contents.append(content)
+
+        # Modifying kwargs itself, rather than returning new value
+        kwargs['sheets_data'][sheet_name] = new_sheet_contents
+    return tuple(new_rpes)
