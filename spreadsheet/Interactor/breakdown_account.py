@@ -56,12 +56,8 @@ def handle_breakdown_accounts(rpes, kwargs):
             if content in breakdown_account_dictionary:
                 account_to_be_broken_down = content
 
-                if n > 0:
-                    if str(new_sheet_contents[n - 1]) != 'blank':
-                        new_sheet_contents.append('blank')
                 new_sheet_contents += breakdown_account_dictionary[account_to_be_broken_down]
                 new_sheet_contents.append(content)
-                new_sheet_contents.append('blank')
             else:
                 new_sheet_contents.append(content)
 
