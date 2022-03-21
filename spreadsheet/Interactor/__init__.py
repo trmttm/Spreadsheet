@@ -168,6 +168,8 @@ class Interactor(BoundaryInABC):
         worksheets = self._worksheets
         position = 3
         for sheet_name, worksheet in worksheets.items():
+            # Make sure UOM's right is blank otherwise BB of corkscrew becomes error
+            worksheet.add_field(worksheet.field_blank, position)
             worksheet.add_field(field_name, position)
 
     def set_uom_to_accounts(self, shape_id_to_uom: dict, field_name: str):
