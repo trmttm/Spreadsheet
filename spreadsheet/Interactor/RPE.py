@@ -30,7 +30,7 @@ def convert_rpe_to_cell_address_(accounts: Accounts, constant_ids: tuple, id_to_
                 element_sheet = rpec.get_element_sheet(element, input_sheet_name, owner_sheet, worksheets)
                 rpec.set_account(element, element_sheet, nop, owner_id, owner_sheet, rpe_list, vcac)
             elif element in constant_ids:
-                rpec.set_element_as_is(id_to_text[element].replace(',', ''), rpe_list, nop)
+                rpec.set_element_as_is(str(id_to_text[element]).replace(',', ''), rpe_list, nop)
             else:
                 rpec.set_element_as_is(element, rpe_list, nop)
         rpe_converted = tuple(rpe_list)
