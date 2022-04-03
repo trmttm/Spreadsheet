@@ -54,6 +54,7 @@ class Interactor(BoundaryInABC):
         self._format_domestic_input = Formats.create_domestic_input_format(create_new_format)
         self._format_subtotal = Formats.create_subtotal_format(create_new_format)
         self._format_heading = Formats.create_heading_format(create_new_format)
+        self._format_breakdown = Formats.create_breakdown_format(create_new_format)
         self._format_whole_number = Formats.create_number_format(create_new_format, self.whole_number_format)
         self._format_one_digits = Formats.create_number_format(create_new_format, self.one_digit_number_format)
         self._format_two_digits = Formats.create_number_format(create_new_format, self.two_digit_number_format)
@@ -176,6 +177,9 @@ class Interactor(BoundaryInABC):
         UOM.set_uom_to_accounts(self._accounts, self.direct_links, field_name, shape_id_to_uom)
 
     # Formatting
+    def format_breakdown(self, breakdown_account_ids: tuple):
+        Formats.set_format_to_cells_except_first_column(self._format_breakdown, breakdown_account_ids, self._worksheets)
+
     def format_subtotal(self, subtotal_account_ids: tuple):
         self._set_format_to_cells(self._format_subtotal, subtotal_account_ids)
 

@@ -40,6 +40,7 @@ class Spreadsheet(SpreadsheetABC):
         number_of_periods = kwargs.get('nop', None)
         vertical_accounts = kwargs.get('vertical_acs', {})
         shape_id_to_uom = kwargs.get('shape_id_to_uom', {})
+        breakdown_accounts = kwargs.get('breakdown_accounts', ())
         heading_accounts = get_formatted_accounts(format_data, 'heading')
         whole_number_accounts = get_formatted_accounts(number_format_data, 'whole number')
         one_digit_accounts = get_formatted_accounts(number_format_data, '1-digit')
@@ -105,6 +106,7 @@ class Spreadsheet(SpreadsheetABC):
         # ===========Formatting must be after modifying DirectLinks / Domestic Inputs!=================================
         interactor.format_subtotal(sub_total_accounts)
         interactor.format_subtotal(tuple(vertical_accounts.keys()))
+        interactor.format_breakdown(breakdown_accounts)
         interactor.format_whole_number(whole_number_accounts)
         interactor.format_one_digit(one_digit_accounts)
         interactor.format_two_digit(two_digit_accounts)

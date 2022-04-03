@@ -76,6 +76,11 @@ class Worksheet:
     def set_default_formats(self, account_id):
         self._field_to_format[account_id] = dict(zip(self._fields, tuple(dict() for _ in self._fields)))
 
+    def set_format_to_all_fields_with_negative_index(self, account_id, format_dict: dict, negative_index: tuple = ()):
+        for n, field in enumerate(self._fields):
+            if n not in negative_index:
+                self.set_format(account_id, field, format_dict)
+
     def set_format_to_all_fields(self, account_id, format_dict: dict):
         for field in self._fields:
             self.set_format(account_id, field, format_dict)

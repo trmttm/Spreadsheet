@@ -31,6 +31,13 @@ def create_subtotal_format(create_new_format: Callable[[], CellFormat]) -> CellF
     return new_format
 
 
+def create_breakdown_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
+    new_format = create_new_format()
+    new_format.set_top_border()
+    new_format.bold()
+    return new_format
+
+
 def create_number_format(create_new_format: Callable[[], CellFormat], number_format: str) -> CellFormat:
     new_format = create_new_format()
     new_format.set_number_format(number_format)
@@ -87,6 +94,14 @@ def set_format_to_cells(cell_format, target_accounts, worksheets):
         worksheet = worksheets.identify_worksheet(account_id)
         if worksheet is not None:
             worksheet.set_format_to_all_fields(account_id, cell_format)
+
+
+def set_format_to_cells_except_first_column(cell_format, target_accounts, worksheets):
+    columns_exceptions = (0,)
+    for account_id in target_accounts:
+        worksheet = worksheets.identify_worksheet(account_id)
+        if worksheet is not None:
+            worksheet.set_format_to_all_fields_with_negative_index(account_id, cell_format, columns_exceptions)
 
 
 def queue_format_synchronizer_commands(format_commands_args_kwargs, queue):

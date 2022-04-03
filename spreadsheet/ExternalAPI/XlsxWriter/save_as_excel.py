@@ -160,7 +160,7 @@ def convert_value(value) -> int:
 def format_interpreter(cell_format: dict) -> dict:
     new_cell_format = {}
     for key, value in cell_format.items():
-        new_key = key_converter[key]
+        new_key = key_converter.get(key, key)
         if new_key in ['top', 'bottom', 'left', 'right', ]:
             value = convert_value(value)
         new_cell_format[new_key] = value

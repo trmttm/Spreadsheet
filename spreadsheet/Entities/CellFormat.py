@@ -34,3 +34,6 @@ class CellFormat(dict):
 
     def set_right_border(self, style: str = 'normal', color: str = 'black'):
         self.set_border('right', style, color)
+
+    def bold(self):
+        self['bold'] = True
