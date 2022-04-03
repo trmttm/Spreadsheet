@@ -34,7 +34,7 @@ def create_subtotal_format(create_new_format: Callable[[], CellFormat]) -> CellF
 def create_breakdown_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
     new_format = create_new_format()
     new_format.set_top_border()
-    new_format.bold()
+    # new_format.bold()
     return new_format
 
 
