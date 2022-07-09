@@ -36,6 +36,7 @@ class Spreadsheet(SpreadsheetABC):
         direct_links = kwargs.get('direct_links', None)
         user_defined_function = kwargs.get('user_defined_function', None)
         format_data = kwargs.get('format_data', None)
+        format_color = kwargs.get('format_color', None)
         number_format_data = kwargs.get('number_format_data', None)
         number_of_periods = kwargs.get('nop', None)
         vertical_accounts = kwargs.get('vertical_acs', {})
@@ -63,6 +64,8 @@ class Spreadsheet(SpreadsheetABC):
                 ...because of overwriting nature of updating account formats.
         """
         interactor = self._interactor
+        if format_color:
+            interactor.set_format_colors(**format_color)
         interactor.set_number_of_periods(number_of_periods)
         interactor.set_direct_links(direct_links)
         interactor.set_vertical_accounts(vertical_accounts)

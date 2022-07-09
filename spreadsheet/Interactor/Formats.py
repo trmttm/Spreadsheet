@@ -4,30 +4,34 @@ from ..Entities import CellFormat
 from ..Entities import Worksheet
 from ..Entities import Worksheets
 
+text_color_input = 'blue'
+text_color_domestic_input = 'orange'
+heading_color = '4F81BD'
+
 
 def create_input_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
     new_format = create_new_format()
-    new_format.set_text_color('blue')
+    new_format.set_text_color(text_color_input)
     return new_format
 
 
 def create_domestic_input_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
     new_format = create_new_format()
-    new_format.set_text_color('orange')
+    new_format.set_text_color(text_color_domestic_input)
     return new_format
 
 
 def create_heading_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
     new_format = create_new_format()
-    new_format.highlight('4F81BD')
+    new_format.highlight(heading_color)
     new_format.set_text_color('white')
     return new_format
 
 
 def create_subtotal_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
     new_format = create_new_format()
-    new_format.set_top_border(color='4F81BD')
-    new_format.set_bottom_border('double', '4F81BD')
+    new_format.set_top_border(color=heading_color)
+    new_format.set_bottom_border('double', heading_color)
     return new_format
 
 

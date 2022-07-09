@@ -47,6 +47,12 @@ class Interactor(BoundaryInABC):
         new_format.set_number_format(self.default_number_format)
         return new_format
 
+    @staticmethod
+    def set_format_colors(**kwargs):
+        Formats.text_color_input = kwargs.get('text_color_input', None) or 'blue'
+        Formats.text_color_domestic_input = kwargs.get('text_color_domestic_input', None) or 'orange'
+        Formats.heading_color = kwargs.get('heading_color', None) or '4F81BD'
+
     def _define_formats(self):
         create_new_format = self._create_new_format
         self._format_default = create_new_format()
