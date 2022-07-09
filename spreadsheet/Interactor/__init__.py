@@ -40,7 +40,7 @@ class Interactor(BoundaryInABC):
         self._gate_way = gate_way
         self._charts = entities.charts
 
-        self._define_formats()
+        self.define_formats()
 
     def _create_new_format(self):
         new_format = self._cls_cell_format()
@@ -51,9 +51,10 @@ class Interactor(BoundaryInABC):
     def set_format_colors(**kwargs):
         Formats.text_color_input = kwargs.get('text_color_input', None) or 'blue'
         Formats.text_color_domestic_input = kwargs.get('text_color_domestic_input', None) or 'orange'
-        Formats.heading_color = kwargs.get('heading_color', None) or '4F81BD'
+        Formats.heading_color_background = kwargs.get('heading_color_background', None) or '4F81BD'
+        Formats.heading_color_text = kwargs.get('heading_color_text', None) or 'white'
 
-    def _define_formats(self):
+    def define_formats(self):
         create_new_format = self._create_new_format
         self._format_default = create_new_format()
         self._format_input = Formats.create_input_format(create_new_format)

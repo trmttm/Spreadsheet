@@ -6,7 +6,8 @@ from ..Entities import Worksheets
 
 text_color_input = 'blue'
 text_color_domestic_input = 'orange'
-heading_color = '4F81BD'
+heading_color_background = '4F81BD'
+heading_color_text = 'white'
 
 
 def create_input_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
@@ -23,15 +24,15 @@ def create_domestic_input_format(create_new_format: Callable[[], CellFormat]) ->
 
 def create_heading_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
     new_format = create_new_format()
-    new_format.highlight(heading_color)
-    new_format.set_text_color('white')
+    new_format.highlight(heading_color_background)
+    new_format.set_text_color(heading_color_text)
     return new_format
 
 
 def create_subtotal_format(create_new_format: Callable[[], CellFormat]) -> CellFormat:
     new_format = create_new_format()
-    new_format.set_top_border(color=heading_color)
-    new_format.set_bottom_border('double', heading_color)
+    new_format.set_top_border(color=heading_color_background)
+    new_format.set_bottom_border('double', heading_color_background)
     return new_format
 
 

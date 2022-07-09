@@ -66,6 +66,7 @@ class Spreadsheet(SpreadsheetABC):
         interactor = self._interactor
         if format_color:
             interactor.set_format_colors(**format_color)
+            interactor.define_formats()
         interactor.set_number_of_periods(number_of_periods)
         interactor.set_direct_links(direct_links)
         interactor.set_vertical_accounts(vertical_accounts)
