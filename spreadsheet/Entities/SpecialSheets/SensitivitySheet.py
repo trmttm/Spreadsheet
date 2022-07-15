@@ -60,6 +60,7 @@ class SensitivitySheet:
                 2: 1,
                 3: f'=INDEX($B$6:$B${6 + len(target_to_address) - 1},$C$5)',
                 4: f'=INDEX($C$6:$C${6 + len(target_to_address) - 1},$C$5)',
+                5: '="0,0.0"',
             },
         }
 
@@ -81,7 +82,7 @@ class SensitivitySheet:
             19: f'=COUNTIF(T{row_first_input_xl}:T{row_first_input_xl + (number_of_variables - 1)},TRUE)',
             24: f'=ROW(Y{start_row_xl + 1})',
             27: 'Tornado - input variables',
-            37: '''="Sensitivity by inputs : "&$D$5&" (current case ="&TEXT($E$5,"0,0")&" "&$F$5&")"''',
+            37: '''="Sensitivity by inputs : "&$D$5&" (current case ="&TEXT($E$5,$F$5)&" period="&C4&")"''',
             41: f'=OFFSET(AN{start_row_xl + 1},T{start_row_xl},0)*20%',
             44: 'Spider - input variables',
             59: '''="Spider : "&$B$3&" (current case ="&TEXT($D$3,"0,0")&" "&$C$3&")"''',
@@ -175,8 +176,9 @@ class SensitivitySheet:
             row = start_row + n + 1
             cell_values_dict[n + start_row] = {
                 0: n + 1,
-                1: shape_id_to_address[input_account],
-                2: shape_id_to_delta[input_account],
+                # 1: shape_id_to_address[input_account],
+                1: f'''={shape_id_to_address[input_account]}&" [+/-"&TEXT(ABS(C{row}),"0.0")&"%]"''',
+                2: shape_id_to_delta[input_account] + n * 0.00001,
                 4: 1,
                 5: f'=$E{row}-$C{row}/100',
                 6: f'=$E{row}+$C{row}/100',
@@ -228,7 +230,7 @@ class SensitivitySheet:
         max_rows = len(cell_values_dict.keys())
         max_column = 0
         for row, data in cell_values_dict.items():
-            max_column = max(max_column, max(data.keys())) + 1
+            max_column = max(max_column, max(data.keys())) + 2
 
         group_of_cell_values = []
         rows_to_loop_in_range = max_rows + 2
@@ -261,7 +263,7 @@ class SensitivitySheet:
                 formats_row_list = []
                 for column in range(max_column):
                     f = {}
-                    if column in (2,):
+                    if column in (2, 5):
                         f.update(self._format_input)
                     f.update(self._format_whole)
                     formats_row_list.append(f)
