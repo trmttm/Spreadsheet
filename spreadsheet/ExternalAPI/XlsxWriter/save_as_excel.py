@@ -13,7 +13,7 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
     for instruction in instructions:
         cell_value = instruction[0]
         sheet_name = instruction[1]
-        rows_to_level = sheet_to_rows_to_levels[sheet_name] if sheet_name in sheet_to_rows_to_levels else {}
+        rows_to_level = sheet_to_rows_to_levels.get(sheet_name, {})
         row, col = instruction[2]
         format_ = instruction[3]
         cell_format = workbook.add_format(format_interpreter(format_))
@@ -25,6 +25,13 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
         worksheet.write(row, col, cell_value, cell_format)
         if row in rows_to_level:
             worksheet.set_row(row, None, None, {'level': rows_to_level[row], 'hidden': True})
+
+    for sheet_name, column_to_width in options.get('column_widths', {}).items():  # Set column width
+        if sheet_name not in worksheets:
+            continue
+        worksheet = worksheets[sheet_name]
+        for col, width in column_to_width.items():
+            worksheet.set_column(col, col, width)
 
     for sheet in workbook.worksheets():
         add_charts(workbook, sheet.name, **options)

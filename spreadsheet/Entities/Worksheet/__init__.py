@@ -21,7 +21,6 @@ class Worksheet:
 
         self._field_to_format = {}
         self._account_to_levels = {}
-        self._filed_to_width = {}
 
     @property
     def name(self) -> str:
@@ -48,6 +47,14 @@ class Worksheet:
     @property
     def initial_row(self) -> int:
         return self._initial_row
+
+    @property
+    def initial_column(self) -> int:
+        return self._initial_column
+
+    @property
+    def fields(self) -> tuple:
+        return self._fields
 
     @property
     def _columns(self) -> tuple:
@@ -147,15 +154,6 @@ class Worksheet:
         levels = tuple(self._account_to_levels.values())
         row_to_levels = dict(zip(rows, levels))
         return row_to_levels
-
-    def set_column_width(self, field, width: int):
-        self._filed_to_width[field] = width
-
-    @property
-    def column_width(self) -> dict:
-        column_width_dictionary = dict(zip(self._fields, tuple(None for _ in range(len(self._fields)))))
-        column_width_dictionary.update(self._filed_to_width)
-        return column_width_dictionary
 
     def __repr__(self):
         return self._name

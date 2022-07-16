@@ -9,6 +9,7 @@ from . import UOM
 from . import VAc
 from . import implementation as impl
 from . import rpe_converter as rpec
+from . import set_worksheets
 from . import util
 from ..BoundaryIn import BoundaryInABC
 from ..Entities import Entities
@@ -409,10 +410,13 @@ class Interactor(BoundaryInABC):
         sheet_names = tuple(name for name in w.worksheet_names if w.get_worksheet(name).groupings_exist)
         dictionaries = tuple(w.get_worksheet(name).row_to_levels for name in sheet_names)
         sheet_to_rows_to_levels_dictionary = dict(zip(sheet_names, dictionaries))
+        columns_widths = set_worksheets.execute(self._worksheets, self.number_of_periods)
+
         options.update({
             'additional_sheets': self._additional_sheet_datas.data,
             'levels_dict': sheet_to_rows_to_levels_dictionary,
             'charts': self._charts.chart_model,
+            'column_widths': columns_widths,
         })
         feed_back = self._gate_way.export_spreadsheet(file_name, **options)
 
