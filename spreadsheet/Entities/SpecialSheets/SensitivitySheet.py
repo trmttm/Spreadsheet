@@ -230,7 +230,8 @@ class SensitivitySheet:
         max_rows = len(cell_values_dict.keys())
         max_column = 0
         for row, data in cell_values_dict.items():
-            max_column = max(max_column, max(data.keys())) + 2
+            max_column = max(max_column, max(data.keys()))
+        max_column += 1
 
         group_of_cell_values = []
         rows_to_loop_in_range = max_rows + 2

@@ -40,8 +40,10 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
         worksheet = worksheets[sheet_name]
         for col, width in column_to_width.items():
             worksheet.set_column(col, col, width)
-        if hide_empty_right_columns:
-            worksheet.set_column(worksheet_to_max_column[worksheet] + 1, last_column, options={'hidden': True})
+
+    if hide_empty_right_columns:
+        for worksheet, max_column in worksheet_to_max_column.items():
+            worksheet.set_column(max_column + 1, last_column, options={'hidden': True})
 
     for sheet in workbook.worksheets():
         add_charts(workbook, sheet.name, **options)
