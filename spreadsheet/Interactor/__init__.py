@@ -417,6 +417,7 @@ class Interactor(BoundaryInABC):
             'levels_dict': sheet_to_rows_to_levels_dictionary,
             'charts': self._charts.chart_model,
             'column_widths': columns_widths,
+            'hide_empty_right_columns': True
         })
         feed_back = self._gate_way.export_spreadsheet(file_name, **options)
 

@@ -9,7 +9,11 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
     worksheets = {}
     workbook_name, instructions = spreadsheet_model
     sheet_to_rows_to_levels = options.get('levels_dict', {})
+    column_widths = options.get('column_widths', {})
+    hide_empty_right_columns = options.get('hide_empty_right_columns', False)
     workbook = xlsxwriter.Workbook(workbook_name)
+    worksheet_to_max_column = {}
+    last_column = 16383
     for instruction in instructions:
         cell_value = instruction[0]
         sheet_name = instruction[1]
@@ -22,16 +26,21 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
             worksheets[sheet_name] = worksheet
         else:
             worksheet = worksheets[sheet_name]
+        max_col_so_far = worksheet_to_max_column[worksheet] if worksheet in worksheet_to_max_column else 1
+        worksheet_to_max_column[worksheet] = max(max_col_so_far, col)
+
         worksheet.write(row, col, cell_value, cell_format)
+
         if row in rows_to_level:
             worksheet.set_row(row, None, None, {'level': rows_to_level[row], 'hidden': True})
 
-    for sheet_name, column_to_width in options.get('column_widths', {}).items():  # Set column width
+    for sheet_name, column_to_width in column_widths.items():  # Set column width
         if sheet_name not in worksheets:
             continue
         worksheet = worksheets[sheet_name]
         for col, width in column_to_width.items():
             worksheet.set_column(col, col, width)
+        worksheet.set_column(worksheet_to_max_column[worksheet] + 1, last_column, options={'hidden': True})
 
     for sheet in workbook.worksheets():
         add_charts(workbook, sheet.name, **options)
