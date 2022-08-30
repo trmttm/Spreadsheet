@@ -151,6 +151,9 @@ class Interactor(BoundaryInABC):
     def insert_vertical_account_columns(self, vertical_accounts: dict):
         VAc.insert_vertical_account_columns_(self._accounts, vertical_accounts, self._worksheets)
 
+    def group_vertical_account_calculation_rows(self):
+        VAc.group_vertical_account_calculation_rows(self._worksheets)
+
     def link_vertical_accounts(self, vertical_accounts: dict):
         args = self._accounts, self.input_accounts, self.number_of_periods, vertical_accounts, self._worksheets
         VAc.link_vertical_accounts(*args)

@@ -14,6 +14,14 @@ def get_vertical_calculation_account_id(original_account_id: str, number: int) -
     return f'vertical_{original_account_id}_{number}'
 
 
+def is_a_vertical_calculation_account_id(account_id) -> bool:
+    return ('vertical_' in str(account_id)) and ('_total' not in str(account_id))
+
+
+def is_a_vertical_total_account_id(account_id) -> bool:
+    return ('vertical_' in str(account_id)) and ('_total' in str(account_id))
+
+
 def get_original_vertical_account(vertical_calculation_account_id: str) -> int:
     return int(vertical_calculation_account_id.split('_')[1].split('_')[0])
 
@@ -131,6 +139,13 @@ def insert_vertical_account_columns_(accounts: Accounts, vertical_accounts: dict
     max_vertical_accounts = get_how_many_vertical_reference_columns_are_needed(vertical_accounts)
     insert_new_vertical_columns(max_vertical_accounts, 3, worksheets)
     add_vertical_fields_to_accounts_and_worksheets(accounts, max_vertical_accounts)
+
+
+def group_vertical_account_calculation_rows(worksheets: Worksheets):
+    for sheet_name, worksheet in worksheets.items():
+        for account_id in worksheet.account_ids:
+            if is_a_vertical_calculation_account_id(account_id) or is_a_vertical_total_account_id(account_id):
+                worksheet.group_row(account_id)
 
 
 def create_vertical_account_rpe_and_sub_totals(number_of_periods: int, rpes: tuple, shape_id_to_text: dict,

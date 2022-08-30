@@ -73,6 +73,7 @@ class Spreadsheet(SpreadsheetABC):
         interactor.handle_inputs(input_accounts, input_values, insert_sheet_name, shape_id_to_text, modules_data)
         interactor.create_new_worksheets(shape_id_to_text, worksheets_data, no_indent)
         interactor.insert_vertical_account_columns(vertical_accounts)
+        interactor.group_vertical_account_calculation_rows()
         interactor.insert_uom(self._field_uom)
 
         # ===========ROW / COLUMN fixes here. Change them before here!=================================================
