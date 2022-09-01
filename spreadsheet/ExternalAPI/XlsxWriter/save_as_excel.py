@@ -16,7 +16,6 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
     worksheet_to_max_column = {}
     worksheet_to_max_row = {}
     last_column = 16383
-    last_row = 1048576
     for instruction in instructions:
         cell_value = instruction[0]
         sheet_name = instruction[1]
@@ -53,10 +52,12 @@ def save_as_excel(spreadsheet_model: tuple, **options) -> str:
 
     if hide_empty_bottom_rows:
         for worksheet, max_row in worksheet_to_max_row.items():
+            rows_to_level = sheet_to_rows_to_levels.get(worksheet.name, {})
             worksheet.set_default_row(hide_unused_rows=True)
 
             for row in range(0, max_row + 2):
-                worksheet.set_row(row, options={'hidden': False})
+                if row not in rows_to_level:
+                    worksheet.set_row(row, options={'hidden': False})
 
     for sheet in workbook.worksheets():
         add_charts(workbook, sheet.name, **options)
