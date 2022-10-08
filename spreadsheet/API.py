@@ -49,7 +49,7 @@ class Spreadsheet(SpreadsheetABC):
         percent_accounts = get_formatted_accounts(number_format_data, '%')
 
         # A few decision making
-        no_indent = heading_accounts + sub_total_accounts + tuple(vertical_accounts.keys())
+        no_indent = tuple(heading_accounts) + tuple(sub_total_accounts) + tuple(vertical_accounts.keys())
 
         # Control Interactor
         """
