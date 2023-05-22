@@ -37,4 +37,3 @@ class Accounts(Dict[Any, Account]):
     def create_new_account(self, account_id, text):
         new_account = Account(account_id, text)
         self[account_id] = new_account
-
