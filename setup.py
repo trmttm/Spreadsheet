@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='spreadsheet',
     version='1.0.0',
-    packages=[],
+    packages=['spreadsheet'],
     url='',
     license='',
     author='Taro Yamaka',
